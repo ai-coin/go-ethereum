@@ -20,6 +20,7 @@ import (
 	"sync"
 
 	"sync/atomic"
+	"time"
 
 	"github.com/ethereum/go-ethereum/consensus"
 	"github.com/ethereum/go-ethereum/log"
@@ -100,6 +101,8 @@ out:
 }
 
 func (self *CpuAgent) mine(work *Work, stop <-chan struct{}) {
+	//SLR wait 15 seconds before sealing the block-  which works on the first attempt with the fake POW flag.
+	time.Sleep(15 * time.Second)
 	if result, err := self.engine.Seal(self.chain, work.Block, stop); result != nil {
 		log.Info("Successfully sealed new block", "number", result.Number(), "hash", result.Hash())
 		self.returnCh <- &Result{work, result}
