@@ -36,10 +36,15 @@ import (
 
 // Ethash proof-of-work protocol constants.
 var (
-	FrontierBlockReward    *big.Int = big.NewInt(5e+18) // Block reward in wei for successfully mining a block
-	ByzantiumBlockReward   *big.Int = big.NewInt(3e+18) // Block reward in wei for successfully mining a block upward from Byzantium
+	// SLR Mining rewards are greatly reduced for AI BlockChain. Whereas the public blockchain rewards 5 ETH for each
+	// sealed block, AI BlockChain rewards .000001 ETH per new block, e+18 wei = one ether.
+	FrontierBlockReward    *big.Int = big.NewInt(1e+13) // Block reward in wei for successfully mining a block
+	ByzantiumBlockReward   *big.Int = big.NewInt(1e+13) // Block reward in wei for successfully mining a block upward from Byzantium
 	maxUncles                       = 2                 // Maximum number of uncles allowed in a single block
-	allowedFutureBlockTime          = 15 * time.Second  // Max time from current time allowed for blocks, before they're considered future blocks
+	// SLR AI BlockChain synchronizes network clocks of the super peers, so tighen the verification from 15 down to 5 seconds for 
+	// new blocks. They are considered errors if timestamped more than 5 seconds in the future - presumably received from a super
+	// peer with a bad clock setting.
+	allowedFutureBlockTime          = 5 * time.Second  // Max time from current time allowed for blocks, before they're considered future blocks
 )
 
 // Various error messages to mark blocks invalid. These should be private to
